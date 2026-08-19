@@ -20,9 +20,16 @@
 # production
 /build
 
-# misc
-.DS_Store
-*.pem
+# Working files
+Intake.zip
+design*.md
+memory*.md
+phases*.md
+prd*.md
+rules*.md
+intake_logo_only.png
+intake_logowithname.png
+
 
 # debug
 npm-debug.log*
