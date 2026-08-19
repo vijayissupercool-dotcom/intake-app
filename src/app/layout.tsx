@@ -12,6 +12,23 @@ export const metadata: Metadata = {
   title: "Intake",
   description:
     "Collect files from anyone directly into your Google Drive. No account needed for uploaders.",
+  icons: {
+    icon: "/intake_logo_only.png",
+    apple: "/intake_logo_only.png",
+  },
+  openGraph: {
+    title: "Intake — Collect files into Google Drive",
+    description:
+      "Create secure file request links. Share them with anyone. Files land straight in your Google Drive folder.",
+    images: ["/intake_logowithname.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Intake — Collect files into Google Drive",
+    description:
+      "Create secure file request links. Share them with anyone. Files land straight in your Google Drive folder.",
+    images: ["/intake_logowithname.png"],
+  },
 };
 
 export default function RootLayout({

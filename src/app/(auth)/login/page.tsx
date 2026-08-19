@@ -80,6 +80,13 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          <div className="mb-4 flex justify-center">
+            <img
+              src="/intake_logowithname.png"
+              alt="Intake"
+              className="h-10 w-auto"
+            />
+          </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>
             Sign in to manage your file requests

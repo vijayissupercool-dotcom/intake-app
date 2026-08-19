@@ -197,6 +197,11 @@ export default function PublicUploadPage() {
       <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center py-12">
+            <img
+              src="/intake_logo_only.png"
+              alt="Intake"
+              className="mb-4 h-12 w-auto"
+            />
             <AlertCircle className="h-12 w-12 text-destructive" />
             <h2 className="mt-4 text-lg font-semibold">Request not found</h2>
             <p className="mt-2 text-center text-muted-foreground">{error}</p>
@@ -211,6 +216,13 @@ export default function PublicUploadPage() {
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
+            <div className="mb-3 flex justify-center">
+              <img
+                src="/intake_logo_only.png"
+                alt="Intake"
+                className="h-8 w-auto"
+              />
+            </div>
             <CardTitle>{request?.title}</CardTitle>
             <CardDescription>
               {request?.description || "Please enter your details to continue"}
@@ -252,6 +264,13 @@ export default function PublicUploadPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
+          <div className="mb-3 flex justify-center">
+            <img
+              src="/intake_logo_only.png"
+              alt="Intake"
+              className="h-8 w-auto"
+            />
+          </div>
           <CardTitle>{request?.title}</CardTitle>
           <CardDescription>
             Upload your files below

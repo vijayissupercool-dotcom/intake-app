@@ -6,8 +6,12 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold">
-            Intake
+          <Link href="/" className="flex items-center gap-2">
+            <img
+              src="/intake_logowithname.png"
+              alt="Intake"
+              className="h-8 w-auto"
+            />
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login">
@@ -86,7 +90,12 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-6xl items-center justify-center gap-2 px-4 text-center text-sm text-muted-foreground">
+          <img
+            src="/intake_logo_only.png"
+            alt="Intake logo"
+            className="h-5 w-auto"
+          />
           Intake
         </div>
       </footer>

@@ -110,8 +110,13 @@ export function Sidebar({ user, isConnected, googleEmail }: SidebarProps) {
   return (
     <aside className="flex h-screen w-64 flex-col border-r bg-card">
       <div className="flex h-14 items-center justify-between border-b px-4">
-        <Link href="/requests" className="text-lg font-bold">
-          Intake
+        <Link href="/requests" className="flex items-center gap-2">
+          <img
+            src="/intake_logo_only.png"
+            alt="Intake"
+            className="h-6 w-6"
+          />
+          <span className="font-bold">Intake</span>
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger
