@@ -10,7 +10,7 @@ export default function LandingPage() {
             <img
               src="/intake_logowithname.png"
               alt="Intake"
-              className="h-8 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
           <div className="flex items-center gap-4">
@@ -94,7 +94,7 @@ export default function LandingPage() {
           <img
             src="/intake_logo_only.png"
             alt="Intake logo"
-            className="h-5 w-auto"
+            className="h-8 w-auto"
           />
           Intake
         </div>

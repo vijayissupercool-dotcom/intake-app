@@ -197,11 +197,11 @@ export default function PublicUploadPage() {
       <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center py-12">
-            <img
-              src="/intake_logo_only.png"
-              alt="Intake"
-              className="mb-4 h-12 w-auto"
-            />
+<img
+                src="/intake_logo_only.png"
+                alt="Intake"
+                className="mb-3 h-12 w-auto"
+              />
             <AlertCircle className="h-12 w-12 text-destructive" />
             <h2 className="mt-4 text-lg font-semibold">Request not found</h2>
             <p className="mt-2 text-center text-muted-foreground">{error}</p>

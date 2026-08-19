@@ -92,10 +92,10 @@ export default function SignupPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <img
+<img
               src="/intake_logowithname.png"
               alt="Intake"
-              className="h-10 w-auto"
+              className="h-16 w-auto"
             />
           </div>
           <CardTitle className="text-2xl">Create an account</CardTitle>

@@ -114,9 +114,9 @@ export function Sidebar({ user, isConnected, googleEmail }: SidebarProps) {
           <img
             src="/intake_logo_only.png"
             alt="Intake"
-            className="h-6 w-6"
+            className="h-8 w-8"
           />
-          <span className="font-bold">Intake</span>
+          <span className="text-lg font-bold">Intake</span>
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger
