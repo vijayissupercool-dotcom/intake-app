@@ -81,13 +81,15 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <img
-              src="/intake_logowithname.png"
-              alt="Intake"
-              className="h-24 w-auto"
-            />
+            <Link href="/" className="transition-opacity hover:opacity-90">
+              <img
+                src="/intake_logowithname.png"
+                alt="Intake"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
           </div>
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
           <CardDescription>
             Sign in to manage your file requests
           </CardDescription>

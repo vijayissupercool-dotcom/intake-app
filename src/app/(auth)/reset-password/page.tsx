@@ -55,7 +55,16 @@ export default function ResetPasswordPage() {
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Password updated</CardTitle>
+            <div className="mb-4 flex justify-center">
+              <Link href="/" className="transition-opacity hover:opacity-90">
+                <img
+                  src="/intake_logowithname.png"
+                  alt="Intake"
+                  className="h-9 w-auto object-contain"
+                />
+              </Link>
+            </div>
+            <CardTitle className="text-2xl font-bold tracking-tight">Password updated</CardTitle>
             <CardDescription>Redirecting you to your dashboard...</CardDescription>
           </CardHeader>
         </Card>
@@ -67,7 +76,16 @@ export default function ResetPasswordPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Set a new password</CardTitle>
+          <div className="mb-4 flex justify-center">
+            <Link href="/" className="transition-opacity hover:opacity-90">
+              <img
+                src="/intake_logowithname.png"
+                alt="Intake"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">Set a new password</CardTitle>
           <CardDescription>Choose a new password for your account</CardDescription>
         </CardHeader>
         <CardContent>

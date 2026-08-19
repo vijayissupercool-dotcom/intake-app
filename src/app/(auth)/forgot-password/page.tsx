@@ -46,7 +46,16 @@ export default function ForgotPasswordPage() {
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <div className="mb-4 flex justify-center">
+              <Link href="/" className="transition-opacity hover:opacity-90">
+                <img
+                  src="/intake_logowithname.png"
+                  alt="Intake"
+                  className="h-9 w-auto object-contain"
+                />
+              </Link>
+            </div>
+            <CardTitle className="text-2xl font-bold tracking-tight">Check your email</CardTitle>
             <CardDescription>
               If an account exists for <strong>{email}</strong>, a password
               reset link has been sent.
@@ -68,7 +77,16 @@ export default function ForgotPasswordPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Reset password</CardTitle>
+          <div className="mb-4 flex justify-center">
+            <Link href="/" className="transition-opacity hover:opacity-90">
+              <img
+                src="/intake_logowithname.png"
+                alt="Intake"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">Reset password</CardTitle>
           <CardDescription>
             Enter your email and we&apos;ll send you a reset link
           </CardDescription>

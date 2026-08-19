@@ -70,7 +70,16 @@ export default function SignupPage() {
       <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <div className="mb-4 flex justify-center">
+              <Link href="/" className="transition-opacity hover:opacity-90">
+                <img
+                  src="/intake_logowithname.png"
+                  alt="Intake"
+                  className="h-9 w-auto object-contain"
+                />
+              </Link>
+            </div>
+            <CardTitle className="text-2xl font-bold tracking-tight">Check your email</CardTitle>
             <CardDescription>
               We sent a confirmation link to <strong>{email}</strong>
             </CardDescription>
@@ -92,13 +101,15 @@ export default function SignupPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-<img
-              src="/intake_logowithname.png"
-              alt="Intake"
-              className="h-24 w-auto"
-            />
+            <Link href="/" className="transition-opacity hover:opacity-90">
+              <img
+                src="/intake_logowithname.png"
+                alt="Intake"
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
           </div>
-          <CardTitle className="text-2xl">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold tracking-tight">Create an account</CardTitle>
           <CardDescription>
             Start collecting files into your Google Drive
           </CardDescription>

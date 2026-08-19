@@ -194,17 +194,22 @@ export default function PublicUploadPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="flex flex-col items-center py-12">
-<img
-              src="/intake_logo_only.png"
-              alt="Intake"
-              className="mb-4 h-20 w-auto"
-            />
-            <AlertCircle className="h-12 w-12 text-destructive" />
-            <h2 className="mt-4 text-lg font-semibold">Request not found</h2>
-            <p className="mt-2 text-center text-muted-foreground">{error}</p>
+      <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+        <Card className="w-full max-w-md shadow-sm">
+          <CardContent className="flex flex-col items-center py-10">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-destructive/10">
+              <AlertCircle className="h-7 w-7 text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold tracking-tight">Request not found</h2>
+            <p className="mt-2 text-center text-sm text-muted-foreground">{error}</p>
+            <div className="mt-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span>Powered by</span>
+              <img
+                src="/intake_logowithname.png"
+                alt="Intake"
+                className="h-3.5 w-auto object-contain opacity-80"
+              />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -213,17 +218,24 @@ export default function PublicUploadPage() {
 
   if (!nameSubmitted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-        <Card className="w-full max-w-md">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-muted/40 px-4 py-8">
+        <div className="mb-6">
+          <img
+            src="/intake_logowithname.png"
+            alt="Intake"
+            className="h-7 w-auto object-contain"
+          />
+        </div>
+        <Card className="w-full max-w-md shadow-md">
           <CardHeader className="text-center">
             <div className="mb-3 flex justify-center">
               <img
                 src="/intake_logo_only.png"
                 alt="Intake"
-                className="h-14 w-auto"
+                className="h-11 w-11 rounded-xl shadow-xs object-cover"
               />
             </div>
-            <CardTitle>{request?.title}</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight">{request?.title}</CardTitle>
             <CardDescription>
               {request?.description || "Please enter your details to continue"}
             </CardDescription>
@@ -251,27 +263,37 @@ export default function PublicUploadPage() {
                 />
               </div>
               <Button type="submit" className="w-full">
-                Continue
+                Continue to Upload
               </Button>
             </form>
           </CardContent>
         </Card>
+        <p className="mt-6 text-xs text-muted-foreground">
+          Files are securely transferred directly into Google Drive
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-      <Card className="w-full max-w-lg">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-muted/40 px-4 py-8">
+      <div className="mb-6">
+        <img
+          src="/intake_logowithname.png"
+          alt="Intake"
+          className="h-7 w-auto object-contain"
+        />
+      </div>
+      <Card className="w-full max-w-lg shadow-md">
         <CardHeader className="text-center">
           <div className="mb-3 flex justify-center">
             <img
               src="/intake_logo_only.png"
               alt="Intake"
-              className="h-14 w-auto"
+              className="h-11 w-11 rounded-xl shadow-xs object-cover"
             />
           </div>
-          <CardTitle>{request?.title}</CardTitle>
+          <CardTitle className="text-xl font-bold tracking-tight">{request?.title}</CardTitle>
           <CardDescription>
             Upload your files below
           </CardDescription>
@@ -351,6 +373,9 @@ export default function PublicUploadPage() {
           )}
         </CardContent>
       </Card>
+      <p className="mt-6 text-xs text-muted-foreground">
+        Files are securely transferred directly into Google Drive
+      </p>
     </div>
   );
 }

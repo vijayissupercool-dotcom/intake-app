@@ -45,16 +45,25 @@ export default async function RequestsPage() {
       </div>
 
       {!requests || requests.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <FileText className="h-12 w-12 text-muted-foreground/50" />
-            <h3 className="mt-4 text-lg font-semibold">No requests yet</h3>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/60 p-2 shadow-xs">
+              <img
+                src="/intake_logo_only.png"
+                alt="Intake"
+                className="h-12 w-12 rounded-xl object-cover shadow-xs"
+              />
+            </div>
+            <h3 className="mt-5 text-lg font-semibold tracking-tight">No requests yet</h3>
+            <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
               Create your first file request to start collecting files
-              directly into Google Drive.
+              directly into your Google Drive.
             </p>
-            <Link href="/requests/new" className="mt-4">
-              <Button>Create request</Button>
+            <Link href="/requests/new" className="mt-6">
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Create request
+              </Button>
             </Link>
           </CardContent>
         </Card>
