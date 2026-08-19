@@ -5,12 +5,12 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
             <img
               src="/intake_logowithname.png"
               alt="Intake"
-              className="h-12 w-auto"
+              className="h-16 w-auto"
             />
           </Link>
           <div className="flex items-center gap-4">
@@ -94,7 +94,7 @@ export default function LandingPage() {
           <img
             src="/intake_logo_only.png"
             alt="Intake logo"
-            className="h-8 w-auto"
+            className="h-12 w-auto"
           />
           Intake
         </div>

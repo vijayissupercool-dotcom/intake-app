@@ -84,7 +84,7 @@ export default function LoginPage() {
             <img
               src="/intake_logowithname.png"
               alt="Intake"
-              className="h-16 w-auto"
+              className="h-24 w-auto"
             />
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>

@@ -198,10 +198,10 @@ export default function PublicUploadPage() {
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center py-12">
 <img
-                src="/intake_logo_only.png"
-                alt="Intake"
-                className="mb-3 h-12 w-auto"
-              />
+              src="/intake_logo_only.png"
+              alt="Intake"
+              className="mb-4 h-20 w-auto"
+            />
             <AlertCircle className="h-12 w-12 text-destructive" />
             <h2 className="mt-4 text-lg font-semibold">Request not found</h2>
             <p className="mt-2 text-center text-muted-foreground">{error}</p>
@@ -220,7 +220,7 @@ export default function PublicUploadPage() {
               <img
                 src="/intake_logo_only.png"
                 alt="Intake"
-                className="h-8 w-auto"
+                className="h-14 w-auto"
               />
             </div>
             <CardTitle>{request?.title}</CardTitle>
@@ -268,7 +268,7 @@ export default function PublicUploadPage() {
             <img
               src="/intake_logo_only.png"
               alt="Intake"
-              className="h-8 w-auto"
+              className="h-14 w-auto"
             />
           </div>
           <CardTitle>{request?.title}</CardTitle>

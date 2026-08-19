@@ -109,12 +109,12 @@ export function Sidebar({ user, isConnected, googleEmail }: SidebarProps) {
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r bg-card">
-      <div className="flex h-14 items-center justify-between border-b px-4">
-        <Link href="/requests" className="flex items-center gap-2">
+      <div className="flex h-16 items-center justify-between border-b px-4">
+        <Link href="/requests" className="flex items-center gap-2.5">
           <img
             src="/intake_logo_only.png"
             alt="Intake"
-            className="h-8 w-8"
+            className="h-10 w-10"
           />
           <span className="text-lg font-bold">Intake</span>
         </Link>
