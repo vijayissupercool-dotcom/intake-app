@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Upload, Check, AlertCircle, FileText } from "lucide-react";
+import { Upload, Check, AlertCircle, FileText, ChevronRight } from "lucide-react";
 
 interface UploadState {
   id: string;
@@ -21,6 +21,29 @@ interface UploadState {
   progress: number;
   status: "pending" | "uploading" | "done" | "error";
   error?: string;
+  requestItemId?: string;
+  reservationId?: string;
+}
+
+interface RequestItem {
+  id: string;
+  name: string;
+  description?: string;
+  required: boolean;
+  allowed_file_types?: string[];
+  max_files?: number;
+  max_file_size_bytes?: number;
+}
+
+interface RequestData {
+  id: string;
+  title: string;
+  description?: string;
+  max_files: number;
+  max_file_size_mb: number;
+  allowed_file_types?: string[];
+  require_uploader_name?: boolean;
+  require_uploader_email?: boolean;
 }
 
 export default function PublicUploadPage() {
@@ -28,25 +51,22 @@ export default function PublicUploadPage() {
   const token = params.token as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [request, setRequest] = useState<{
-    id: string;
-    title: string;
-    description?: string;
-    max_files: number;
-    max_file_size_mb: number;
-    allowed_file_types?: string[];
-  } | null>(null);
+  const [request, setRequest] = useState<RequestData | null>(null);
+  const [items, setItems] = useState<RequestItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [uploaderName, setUploaderName] = useState("");
   const [uploaderEmail, setUploaderEmail] = useState("");
   const [nameSubmitted, setNameSubmitted] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [uploads, setUploads] = useState<UploadState[]>([]);
   const [dragActive, setDragActive] = useState(false);
 
-  // Fetch request info on mount
   const fetchRequest = useCallback(async () => {
     try {
+      // Step 1: Fetch request info + items (token hash lookup, server-side)
       const response = await fetch(`/api/public/request/${token}`);
       if (!response.ok) {
         const data = await response.json();
@@ -54,6 +74,22 @@ export default function PublicUploadPage() {
       }
       const data = await response.json();
       setRequest(data.request);
+      setItems(data.items || []);
+
+      // Step 2: Create a short-lived public session (Phase 5 security)
+      const sessionResponse = await fetch("/api/public/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      if (sessionResponse.ok) {
+        const sessionData = await sessionResponse.json();
+        setSessionToken(sessionData.sessionToken);
+      } else {
+        // Session creation failed — continue without session (backward compat)
+        // The presign endpoint will fall back to token hash validation
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load request");
     } finally {
@@ -61,20 +97,56 @@ export default function PublicUploadPage() {
     }
   }, [token]);
 
-  // Initialize on first render
   useState(() => {
     fetchRequest();
   });
 
-  const handleNameSubmit = (e: React.FormEvent) => {
+  const createSubmission = async () => {
+    try {
+      const response = await fetch("/api/public/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionToken: sessionToken || undefined,
+          requestToken: sessionToken ? undefined : token,
+          uploaderName: uploaderName || undefined,
+          uploaderEmail: uploaderEmail || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create submission");
+      }
+
+      const { submission } = await response.json();
+      setSubmissionId(submission.id);
+      return submission.id;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create submission");
+      return null;
+    }
+  };
+
+  const handleNameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (uploaderName.trim()) {
+
+    const nameValid = !request?.require_uploader_name || uploaderName.trim().length > 0;
+    const emailValid = !request?.require_uploader_email || uploaderEmail.trim().length > 0;
+
+    if (!nameValid || !emailValid) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    const sid = await createSubmission();
+    if (sid) {
       setNameSubmitted(true);
     }
   };
 
   const uploadFile = async (file: File) => {
-    if (!request) return;
+    if (!request || !submissionId) return;
 
     const uploadId = `temp-${Date.now()}-${Math.random()}`;
     const newUpload: UploadState = {
@@ -82,40 +154,45 @@ export default function PublicUploadPage() {
       fileName: file.name,
       progress: 0,
       status: "pending",
+      requestItemId: selectedItemId || undefined,
     };
 
     setUploads((prev) => [...prev, newUpload]);
 
     try {
-      // Get presigned URL
+      const presignBody: Record<string, unknown> = {
+        requestId: request.id,
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type || "application/octet-stream",
+        uploaderName: uploaderName || undefined,
+        uploaderEmail: uploaderEmail || undefined,
+      };
+
+      if (submissionId) presignBody.submissionId = submissionId;
+      if (selectedItemId) presignBody.requestItemId = selectedItemId;
+
       const presignResponse = await fetch("/api/upload/presign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          requestId: request.id,
-          fileName: file.name,
-          fileSize: file.size,
-          fileType: file.type || "application/octet-stream",
-          uploaderName: uploaderName || undefined,
-          uploaderEmail: uploaderEmail || undefined,
-        }),
+        body: JSON.stringify(presignBody),
       });
 
       if (!presignResponse.ok) {
         const data = await presignResponse.json();
-        throw new Error(data.error || "Failed to prepare upload");
+        throw new Error(data.debug_error ? `${data.error} (Debug: ${JSON.stringify(data.debug_error)})` : data.error || "Failed to prepare upload");
       }
 
-      const { uploadId: realUploadId, presignedUrl } = await presignResponse.json();
+      const { uploadId: realUploadId, presignedUrl, reservationId } = await presignResponse.json();
 
-      // Update with real ID
       setUploads((prev) =>
         prev.map((u) =>
-          u.id === uploadId ? { ...u, id: realUploadId, status: "uploading" } : u
+          u.id === uploadId
+            ? { ...u, id: realUploadId, reservationId, status: "uploading", requestItemId: selectedItemId || undefined }
+            : u
         )
       );
 
-      // Upload to R2 via presigned URL
       const xhr = new XMLHttpRequest();
       xhr.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable) {
@@ -142,7 +219,6 @@ export default function PublicUploadPage() {
         xhr.send(file);
       });
 
-      // Mark as done
       setUploads((prev) =>
         prev.map((u) =>
           u.id === realUploadId
@@ -151,11 +227,10 @@ export default function PublicUploadPage() {
         )
       );
 
-      // Trigger transfer (server-side, no secret exposed to browser)
-      fetch("/api/upload/complete", {
+       fetch("/api/upload/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uploadId: realUploadId }),
+        body: JSON.stringify({ uploadId: realUploadId, reservationId }),
       });
     } catch (err) {
       setUploads((prev) =>
@@ -182,6 +257,11 @@ export default function PublicUploadPage() {
     if (files) {
       Array.from(files).forEach(uploadFile);
     }
+  };
+
+  const getFileName = (upload: UploadState) => {
+    const item = items.find((i) => i.id === upload.requestItemId);
+    return `${upload.fileName}${item ? ` — ${item.name}` : ""}`;
   };
 
   if (loading) {
@@ -243,23 +323,28 @@ export default function PublicUploadPage() {
           <CardContent>
             <form onSubmit={handleNameSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Your name *</Label>
+                <Label htmlFor="name">
+                  {request?.require_uploader_name ? "Your name *" : "Your name (optional)"}
+                </Label>
                 <Input
                   id="name"
                   placeholder="John Doe"
                   value={uploaderName}
                   onChange={(e) => setUploaderName(e.target.value)}
-                  required
+                  required={request?.require_uploader_name}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Your email (optional)</Label>
+                <Label htmlFor="email">
+                  {request?.require_uploader_email ? "Your email *" : "Your email (optional)"}
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
                   value={uploaderEmail}
                   onChange={(e) => setUploaderEmail(e.target.value)}
+                  required={request?.require_uploader_email}
                 />
               </div>
               <Button type="submit" className="w-full">
@@ -299,6 +384,56 @@ export default function PublicUploadPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {items.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-sm font-medium">Upload items</p>
+              <div className="flex flex-col gap-2">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`rounded-lg border p-3 cursor-pointer transition-all ${
+                      selectedItemId === item.id
+                        ? "border-primary bg-primary/5"
+                        : "border-muted hover:border-muted-foreground/50"
+                    }`}
+                    onClick={() => setSelectedItemId(item.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-muted-foreground/50" />
+                        <div>
+                          <p className="font-medium">{item.name}</p>
+                          {item.description && (
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          )}
+                          {item.required && (
+                            <span className="text-xs text-destructive">Required</span>
+                          )}
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                    </div>
+                    {item.allowed_file_types && item.allowed_file_types.length > 0 && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Allowed: {item.allowed_file_types.join(", ")}
+                      </p>
+                    )}
+                    {item.max_files && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Up to {item.max_files} file(s)
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {selectedItemId
+                  ? `Uploading for: ${items.find((i) => i.id === selectedItemId)?.name}`
+                  : "No item selected — files will be untitled"}
+              </p>
+            </div>
+          )}
+
           <div
             className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
               dragActive
@@ -316,6 +451,7 @@ export default function PublicUploadPage() {
             <p className="mt-3 text-sm text-muted-foreground">
               Drag and drop files here, or{" "}
               <button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 className="text-primary underline"
               >
@@ -331,6 +467,11 @@ export default function PublicUploadPage() {
               multiple
               className="hidden"
               onChange={handleFileSelect}
+              accept={
+                items.length > 0 && selectedItemId
+                  ? items.find((i) => i.id === selectedItemId)?.allowed_file_types?.join(", ")
+                  : request?.allowed_file_types?.join(", ")
+              }
             />
           </div>
 
@@ -348,7 +489,7 @@ export default function PublicUploadPage() {
                         <FileText className="h-4 w-4 text-muted-foreground" />
                       )}
                       <span className="text-sm font-medium">
-                        {upload.fileName}
+                        {getFileName(upload)}
                       </span>
                     </div>
                     <span className="text-xs text-muted-foreground">
